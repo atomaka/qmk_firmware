@@ -33,7 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define USE_SERIAL_PD2
 
 #define TAPPING_FORCE_HOLD
-#define TAPPING_TERM 100
+#undef TAPPING_TERM
+#define TAPPING_TERM 250
 
 #undef RGBLED_NUM
 #define RGBLIGHT_ANIMATIONS
@@ -45,6 +46,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ENCODERS_PAD_A { F4 }
 #define ENCODERS_PAD_B { F5 }
 #define ENCODER_RESOLUTION 4
+
+#define LEADER_PER_KEY_TIMING
+#define LEADER_TIMEOUT 500
 
 // Underglow
 /*
