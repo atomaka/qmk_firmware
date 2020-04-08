@@ -9,6 +9,10 @@
 #include "keyboard.h"
 #include "wait.h"
 
+#ifdef EE_HANDS
+#    include "eeconfig.h"
+#endif
+
 #ifdef USE_MATRIX_I2C
 #  include "i2c.h"
 #else
@@ -18,6 +22,7 @@
 #ifndef SPLIT_USB_TIMEOUT
 #    define SPLIT_USB_TIMEOUT 2500
 #endif
+
 
 volatile bool isLeftHand = true;
 
@@ -44,13 +49,13 @@ __attribute__((weak)) bool is_keyboard_left(void) {
 #elif defined(EE_HANDS)
     return eeconfig_read_handedness();
 #elif defined(MASTER_RIGHT)
-    return !has_usb();
+    return !is_keyboard_master();
 #endif
 
-    return has_usb();
+    return is_keyboard_master();
 }
 
-__attribute__((weak)) bool has_usb(void) {
+__attribute__((weak)) bool is_keyboard_master(void) {
     static enum { UNKNOWN, MASTER, SLAVE } usbstate = UNKNOWN;
 
     // only check once, as this is called often
@@ -89,7 +94,7 @@ static void keyboard_slave_setup(void) {
 }
 
 void split_keyboard_setup(void) {
-   isLeftHand = is_keyboard_left();
+    isLeftHand = is_keyboard_left();
 
    if (has_usb()) {
       keyboard_master_setup();
@@ -97,4 +102,9 @@ void split_keyboard_setup(void) {
       keyboard_slave_setup();
    }
    sei();
+}
+
+// backwards compat
+bool has_usb(void) {
+   return is_keyboard_master();
 }
